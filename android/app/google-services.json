@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "263901926070",
+    "project_id": "socialappflutter-cca15",
+    "storage_bucket": "socialappflutter-cca15.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:263901926070:android:35f8110aba26eb0a134c17",
+        "android_client_info": {
+          "package_name": "com.example.social_media"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3Tq3Wom9O2xSpefTlHoD4IQziqXYKLC4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
