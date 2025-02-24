@@ -1,59 +1,50 @@
-/*
-
-LOGIN PAGE
-
-On this page, an existing user can login with their:
--email
--password
----------------------------------------
-Once the user successfully logs in, they will be redireacted to home page.
-
-If user dose'nt have an account, they can go to register page from here to create one
-
- */
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_media/feature/auth/presentation/components/my_button.dart';
-import 'package:social_media/feature/auth/presentation/components/my_text_field.dart';
 import 'package:social_media/feature/auth/presentation/cubits/auth_cubit.dart';
 
-class LoginPage extends StatefulWidget {
+import '../components/my_button.dart';
+import '../components/my_text_field.dart';
+
+class RegisterPage extends StatefulWidget {
   final void Function()? togglePages;
-  const LoginPage({super.key, required this.togglePages});
+  const RegisterPage({super.key, required this.togglePages});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     final emailController = TextEditingController();
     final pwController = TextEditingController();
+    final nameController = TextEditingController();
+    final confirmController = TextEditingController();
 
-    // login button pressed
-    void login() {
-      // prepare email and pw
-      final String email = emailController.text;
-      final String pw = pwController.text;
+    void register() {
+      final String emailValue = emailController.text;
+      final String pwValue = pwController.text;
+      final String nameValue = nameController.text;
+      final String confirmValue = confirmController.text;
+
       // auth cubit
       final authCubit = context.read<AuthCubit>();
 
-      // ensure the email and pw field are not empty
-      if (email.isNotEmpty && pw.isNotEmpty) {
-        authCubit.login(email, pw);
+      // ensure the field aren't empty
+      if (emailValue.isNotEmpty &&
+          pwValue.isNotEmpty &&
+          confirmValue.isNotEmpty &&
+          nameValue.isNotEmpty) {
+        if (pwValue != confirmValue) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("Passwords do not match!")));
+        } else {
+          authCubit.register(nameValue, emailValue, pwValue);
+        }
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text("Please enter both email and password")));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Please complete all field")));
       }
-    }
-
-    @override
-    void dispose() {
-      emailController.dispose();
-      pwController.dispose();
-      super.dispose();
     }
 
     return Scaffold(
@@ -71,8 +62,14 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 50),
               // welcome back message
               Text(
-                "Welcome back, you've been missed!",
+                "Let's create a account for you",
                 style: TextStyle(color: Theme.of(context).colorScheme.primary),
+              ),
+              const SizedBox(height: 25),
+              MyTextField(
+                controller: nameController,
+                hintText: 'Name',
+                obscureText: false,
               ),
               const SizedBox(height: 25),
               MyTextField(
@@ -86,26 +83,33 @@ class _LoginPageState extends State<LoginPage> {
                 hintText: 'Password',
                 obscureText: true,
               ),
+              const SizedBox(height: 25),
+              MyTextField(
+                controller: confirmController,
+                hintText: 'Confirm password',
+                obscureText: true,
+              ),
               // Button login
               const SizedBox(height: 25),
               MyButton(
-                text: 'login',
-                onTap: login,
+                text: 'register',
+                onTap: register,
               ),
               const SizedBox(height: 50),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    "Not a member? ",
+                    "Already a member? ",
                     style:
                         TextStyle(color: Theme.of(context).colorScheme.primary),
                   ),
                   GestureDetector(
                     onTap: widget.togglePages,
                     child: Text(
-                      "Register now",
+                      "login now",
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.inversePrimary,
                         fontWeight: FontWeight.bold,
