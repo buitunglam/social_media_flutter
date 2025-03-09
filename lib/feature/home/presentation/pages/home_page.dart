@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/feature/home/presentation/components/my_drawer.dart';
+import 'package:social_media/feature/post/components/post_tile.dart';
 import 'package:social_media/feature/post/presentation/cubits/post_cubit.dart';
 import 'package:social_media/feature/post/presentation/cubits/post_states.dart';
 import 'package:social_media/feature/post/presentation/pages/upload_post_page.dart';
@@ -72,15 +73,9 @@ class _HomePageState extends State<HomePage> {
                   final post = allPosts[index];
                   // image
                   debugPrint("Image URL: ${post.imageUrl}");
-                  return CachedNetworkImage(
-                    imageUrl: post.imageUrl,
-                    height: 430,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => const SizedBox(height: 430),
-                    errorWidget: (context, url, error) => const Center(
-                      child: Icon(Icons.error),
-                    ),
+                  return PostTile(
+                    post: post,
+                    onDeletePressed: () => deletePost(post.id),
                   );
                 });
           } else if (state is PostsError) {

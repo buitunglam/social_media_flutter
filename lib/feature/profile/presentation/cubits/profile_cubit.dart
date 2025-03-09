@@ -8,7 +8,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   ProfileCubit({required this.profileRepo}) : super(ProfileInitial());
 
-  // fetch user profile  using repo
+  // fetch user profile  using repo -> useFull for loading single profile pages
   Future<void> fetchUserProfile(String uid) async {
     try {
       emit(ProfileLoading());
@@ -23,6 +23,13 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
+  // return user profile giben uid -> useFull for loading many profile for all post
+  Future<ProfileUser?> getUserProfile(String uid) async {
+    final user = await profileRepo.fetchUserProfile(uid);
+    return user;
+  } 
+
+
   // update user profile
   Future<void> updateProfile({
     required String uid,
@@ -32,22 +39,22 @@ class ProfileCubit extends Cubit<ProfileState> {
     try {
       // fetch current user
       final currentUser = await profileRepo.fetchUserProfile(uid);
-      if(currentUser == null){
+      if (currentUser == null) {
         emit(ProfileError("Failed to fetch user to update profile"));
         return;
       }
-     
+
       // profile updload image
 
       // update new profile
-      final updateProfile = currentUser.copyWith(newBio: newBio ?? currentUser.bio);
-     print("updateProfile ----${updateProfile.bio} -- uid: $uid");
+      final updateProfile =
+          currentUser.copyWith(newBio: newBio ?? currentUser.bio);
+      print("updateProfile ----${updateProfile.bio} -- uid: $uid");
       // update in repo
       await profileRepo.updateProfile(updateProfile);
 
       // fetch to update user in state
       await fetchUserProfile(uid);
-
     } catch (e) {
       emit(ProfileError("Error updating profle: $e"));
     }
