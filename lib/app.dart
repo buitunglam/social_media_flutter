@@ -4,6 +4,8 @@ import 'package:social_media/feature/auth/data/firebase_auth_repo.dart';
 import 'package:social_media/feature/auth/presentation/cubits/auth_cubit.dart';
 import 'package:social_media/feature/auth/presentation/cubits/auth_state.dart';
 import 'package:social_media/feature/home/presentation/pages/home_page.dart';
+import 'package:social_media/feature/post/data/firebase_post.repo.dart';
+import 'package:social_media/feature/post/presentation/cubits/post_cubit.dart';
 import 'package:social_media/feature/profile/data/firebase_profile_repo.dart';
 import 'package:social_media/feature/profile/presentation/cubits/profile_cubit.dart';
 
@@ -31,6 +33,8 @@ Check Auth Site
 class MyApp extends StatelessWidget {
   final authRepo = FirebaseAuthRepo();
   final profileRepo = FirebaseProfileRepo();
+  final postRepo = FirebasePostRepo();
+
   MyApp({super.key});
   @override
   Widget build(BuildContext context) {
@@ -40,7 +44,13 @@ class MyApp extends StatelessWidget {
           BlocProvider(
             create: (context) => AuthCubit(authRepo: authRepo)..checkAuth(),
           ),
-          BlocProvider(create: (context) => ProfileCubit(profileRepo: profileRepo))
+          
+          // profile cubit
+          BlocProvider(
+              create: (context) => ProfileCubit(profileRepo: profileRepo)),
+          
+          // post cubit
+          BlocProvider(create: (context) => PostCubit(postRepo: postRepo))
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

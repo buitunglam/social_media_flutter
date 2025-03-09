@@ -44,9 +44,16 @@ class _ProfilePageState extends State<ProfilePage> {
             title: Center(
               child: Text(user.name),
             ),
-            actions: [IconButton(onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfilePage(user: user)));
-            }, icon: Icon(Icons.settings))],
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EditProfilePage(user: user)));
+                  },
+                  icon: Icon(Icons.settings))
+            ],
           ),
           body: Column(
             children: [
