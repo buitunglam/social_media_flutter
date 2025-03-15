@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:social_media/feature/post/domain/entities/comment.dart';
 import 'package:social_media/feature/post/domain/entities/post.dart';
 import 'package:social_media/feature/post/domain/repos/post.repos.dart';
 
@@ -78,6 +79,50 @@ class FirebasePostRepo implements PostRepo {
       }
     } catch (e) {
       throw Exception("Error toggling like: @e");
+    }
+  }
+
+  @override
+  Future<void> addComment(String postId, Comment comment) async {
+    try {
+      // get post comment
+      final postDoc = await postsCollection.doc(postId).get();
+
+      if (postDoc.exists) {
+        // convert to json
+        final post = Post.fromJson(postDoc.data() as Map<String, dynamic>);
+
+        //add the new comment
+        post.comments.add(comment);
+
+        // update the post document in firestore
+        await postsCollection.doc(postId).update(
+            {'comments': post.comments.map((comment) => comment.toJson())});
+      }
+    } catch (e) {
+      throw Exception("Error adding comment: $e");
+    }
+  }
+
+  @override
+  Future<void> deleteComment(String postId, String commentId) async {
+    try {
+      // get post comment
+      final postDoc = await postsCollection.doc(postId).get();
+
+      if (postDoc.exists) {
+        // convert to json
+        final post = Post.fromJson(postDoc.data() as Map<String, dynamic>);
+
+        //add the new comment
+        post.comments.removeWhere((comment) => comment.id == commentId);
+
+        // update the post document in firestore
+        await postsCollection.doc(postId).update(
+            {'comments': post.comments.map((comment) => comment.toJson())});
+      }
+    } catch (e) {
+      throw Exception("Error adding comment: $e");
     }
   }
 }

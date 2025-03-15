@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:social_media/feature/post/domain/entities/comment.dart';
 
 class Post {
   final String id;
@@ -8,6 +9,7 @@ class Post {
   final String imageUrl;
   final DateTime timestamp;
   final List<String> likes; // store uid - people are like this post
+  final List<Comment> comments;
 
   Post({
     required this.id,
@@ -17,6 +19,7 @@ class Post {
     required this.imageUrl,
     required this.timestamp,
     required this.likes,
+    required this.comments,
   });
 
   // method to update post
@@ -28,7 +31,8 @@ class Post {
         text: text,
         imageUrl: imageUrl ?? this.imageUrl,
         timestamp: timestamp,
-        likes: likes);
+        likes: likes,
+        comments: comments);
   }
 
   // Convert json -> post
@@ -40,11 +44,18 @@ class Post {
       'imageUrl': imageUrl,
       'text': text,
       'timestamp': timestamp,
-      'likes': likes
+      'likes': likes,
+      'comments': comments.map((comment) => comment.toJson()).toList()
     };
   }
 
   factory Post.fromJson(Map<String, dynamic> json) {
+    // prepare list comment
+    final List<Comment> comments = (json['comments'] as List<dynamic>?)
+            ?.map((commentJson) => Comment.fromJson(commentJson))
+            .toList() ??
+        [];
+
     return Post(
         id: json['id'],
         userId: json['userId'],
@@ -52,6 +63,7 @@ class Post {
         text: json['text'],
         imageUrl: json['imageUrl'],
         timestamp: (json['timestamp'] as Timestamp).toDate(),
-        likes: List<String>.from(json['likes'] ?? []));
+        likes: List<String>.from(json['likes'] ?? []),
+        comments: comments);
   }
 }

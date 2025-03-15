@@ -40,7 +40,8 @@ class _UploadPostPageState extends State<UploadPostPage> {
         text: textController.text,
         imageUrl: imageUrlController.text,
         timestamp: DateTime.now(),
-        likes: []);
+        likes: [],
+        comments: []);
 
     final postCubit = context.read<PostCubit>();
     postCubit.createPost(newPost);
